@@ -1,0 +1,46 @@
+{% extends "mflix/base.html" %}
+{% block title %}Movies — MFlix{% endblock %}
+{% block content %}
+<h1 class="mb-4">Movies</h1>
+
+<div class="row g-3">
+  {% for movie in movies %}
+  <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+    <div class="card h-100 shadow-sm">
+      {% if movie.poster %}
+      <img src="{{ movie.poster }}" class="card-img-top" alt="{{ movie.title }}" style="height:280px;object-fit:cover;">
+      {% endif %}
+      <div class="card-body d-flex flex-column">
+        <h6 class="card-title">
+          <a href="{% url 'mflix:movie-detail' movie.pk %}" class="text-decoration-none">{{ movie.title }}</a>
+        </h6>
+        <p class="text-muted small mb-1">{{ movie.year }}{% if movie.runtime %} · {{ movie.runtime }} min{% endif %}{% if movie.rated %} · {{ movie.rated }}{% endif %}</p>
+        {% for g in movie.genres %}
+        <span class="badge bg-secondary badge-genre me-1">{{ g }}</span>
+        {% endfor %}
+        <p class="card-text small mt-2 flex-grow-1">{{ movie.plot|truncatewords:20 }}</p>
+        {% if movie.imdb_rating %}
+        <p class="mb-0 small"><strong>IMDb:</strong> {{ movie.imdb_rating }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p>No movies found.</p>
+  {% endfor %}
+</div>
+
+{% if is_paginated %}
+<nav class="mt-4">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+{% endblock %}

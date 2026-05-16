@@ -1,0 +1,37 @@
+{% extends "mflix/base.html" %}
+{% block title %}Users — MFlix{% endblock %}
+{% block content %}
+<h1 class="mb-4">Users</h1>
+<table class="table table-hover table-striped bg-white shadow-sm rounded">
+  <thead class="table-dark">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.name }}</td>
+      <td>{{ user.email }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="2">No users found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if is_paginated %}
+<nav class="mt-4">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+{% endblock %}

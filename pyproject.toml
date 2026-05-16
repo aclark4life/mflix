@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "mflix"
+version = "0.1.0"
+description = "Django app demonstrating the MongoDB Atlas sample_mflix dataset"
+requires-python = ">=3.13"
+dependencies = [
+    "django-mongodb-backend==6.0.*",
+]
+
+[project.optional-dependencies]
+dev = [
+    "django>=6.0",
+]

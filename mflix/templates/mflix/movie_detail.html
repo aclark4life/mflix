@@ -1,0 +1,99 @@
+{% extends "mflix/base.html" %}
+{% block title %}{{ movie.title }} — MFlix{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-3 mb-4">
+    {% if movie.poster %}
+    <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="img-fluid poster-lg shadow">
+    {% endif %}
+  </div>
+  <div class="col-md-9">
+    <h1>{{ movie.title }} <small class="text-muted fs-4">({{ movie.year }})</small></h1>
+    <p>
+      {% for g in movie.genres %}<span class="badge bg-primary me-1">{{ g }}</span>{% endfor %}
+      {% if movie.rated %}<span class="badge bg-secondary">{{ movie.rated }}</span>{% endif %}
+      {% if movie.runtime %}<span class="ms-2 text-muted">{{ movie.runtime }} min</span>{% endif %}
+    </p>
+    <p class="lead">{{ movie.plot }}</p>
+    {% if movie.fullplot and movie.fullplot != movie.plot %}
+    <p>{{ movie.fullplot }}</p>
+    {% endif %}
+
+    <dl class="row">
+      {% if movie.directors %}
+      <dt class="col-sm-3">Director(s)</dt>
+      <dd class="col-sm-9">{{ movie.directors|join:", " }}</dd>
+      {% endif %}
+      {% if movie.cast %}
+      <dt class="col-sm-3">Cast</dt>
+      <dd class="col-sm-9">{{ movie.cast|join:", " }}</dd>
+      {% endif %}
+      {% if movie.writers %}
+      <dt class="col-sm-3">Writers</dt>
+      <dd class="col-sm-9">{{ movie.writers|join:", " }}</dd>
+      {% endif %}
+      {% if movie.countries %}
+      <dt class="col-sm-3">Countries</dt>
+      <dd class="col-sm-9">{{ movie.countries|join:", " }}</dd>
+      {% endif %}
+      {% if movie.languages %}
+      <dt class="col-sm-3">Languages</dt>
+      <dd class="col-sm-9">{{ movie.languages|join:", " }}</dd>
+      {% endif %}
+      {% if movie.released %}
+      <dt class="col-sm-3">Released</dt>
+      <dd class="col-sm-9">{{ movie.released|date:"N j, Y" }}</dd>
+      {% endif %}
+    </dl>
+
+    <div class="row g-3 mt-1">
+      {% if movie.imdb %}
+      <div class="col-auto">
+        <div class="card border-warning text-center px-3 py-2">
+          <div class="fs-4 fw-bold text-warning">{{ movie.imdb.rating|default:"—" }}</div>
+          <div class="small text-muted">IMDb ({{ movie.imdb.votes|default:0 }} votes)</div>
+        </div>
+      </div>
+      {% endif %}
+      {% if movie.tomatoes %}
+      {% with v=movie.tomatoes.viewer %}
+      {% if v %}
+      <div class="col-auto">
+        <div class="card border-danger text-center px-3 py-2">
+          <div class="fs-4 fw-bold text-danger">{{ v.rating|default:"—" }}</div>
+          <div class="small text-muted">Audience ({{ v.numReviews|default:0 }})</div>
+        </div>
+      </div>
+      {% endif %}
+      {% endwith %}
+      {% endif %}
+      {% if movie.awards %}
+      <div class="col-auto">
+        <div class="card border-success text-center px-3 py-2">
+          <div class="fs-5 fw-bold text-success">🏆 {{ movie.awards.wins|default:0 }}</div>
+          <div class="small text-muted">{{ movie.awards.text|default:"Awards" }}</div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% if comments %}
+<hr class="my-4">
+<h3>Comments ({{ comments|length }}{% if comments|length == 10 %}+{% endif %})</h3>
+{% for comment in comments %}
+<div class="card mb-2">
+  <div class="card-body py-2">
+    <strong>{{ comment.name }}</strong>
+    <span class="text-muted small ms-2">{{ comment.date|date:"N j, Y" }}</span>
+    <p class="mb-0 mt-1">{{ comment.text }}</p>
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="mt-4">
+  <a href="{% url 'mflix:movie-list' %}" class="btn btn-outline-secondary">← Back to Movies</a>
+</div>
+{% endblock %}

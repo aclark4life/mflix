@@ -1,0 +1,32 @@
+{% extends "mflix/base.html" %}
+{% block title %}Comments — MFlix{% endblock %}
+{% block content %}
+<h1 class="mb-4">Comments</h1>
+<div class="list-group">
+  {% for comment in comments %}
+  <div class="list-group-item">
+    <div class="d-flex justify-content-between">
+      <strong>{{ comment.name }}</strong>
+      <small class="text-muted">{{ comment.date|date:"N j, Y" }}</small>
+    </div>
+    <p class="mb-0 mt-1">{{ comment.text }}</p>
+  </div>
+  {% empty %}
+  <p>No comments found.</p>
+  {% endfor %}
+</div>
+
+{% if is_paginated %}
+<nav class="mt-4">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+{% endblock %}
